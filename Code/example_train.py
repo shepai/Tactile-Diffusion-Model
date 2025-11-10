@@ -16,13 +16,19 @@ X=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/X_data.npy")[:,:7,:].res
 y=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/y_data.npy")
 Xn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/Xn_data.npy")[:,:7,:].reshape((200,7*355,328))
 yn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/yn_data.npy")
-mask = np.any(XB != 0, axis=(1, 2, 3))
-XB = XB[mask]
-yB = yB[mask]
-print(XB.shape)
-mask = np.any(XB != 1, axis=(1, 2, 3))
-XB = XB[mask]
-yB = yB[mask]
+#preprocess it all
+mask = np.any(X != 0, axis=(1, 2, 3))
+X = X[mask]
+y = y[mask]
+mask = np.any(X != 1, axis=(1, 2, 3))
+X = X[mask]
+y = y[mask]
+mask = np.any(Xn != 0, axis=(1, 2, 3))
+Xn = Xn[mask]
+yn = yn[mask]
+mask = np.any(Xn != 1, axis=(1, 2, 3))
+Xn = Xn[mask]
+yn = yn[mask]
 
 #train model
 dataset = torch.utils.data.TensorDataset(torch.tensor(X))
