@@ -49,16 +49,17 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
     for file_path in file_paths:
         try:
             data = np.load(file_path)
+            if type_ == "circle" or type_ == "pressure":
+                data = data[:, :, :len(np.arange(10, 100, 10))]
+                total_samples += data.shape[0] * 2 * len(np.arange(10, 100, 10))
+            else:
+                data = data.reshape((200, 20, 355, 328))
+                product = np.prod(data.shape)
+                total_samples += product
         except ValueError:
             print("issue with",file_path)
             file_paths.remove(file_path)
-        if type_ == "circle" or type_ == "pressure":
-            data = data[:, :, :len(np.arange(10, 100, 10))]
-            total_samples += data.shape[0] * 2 * len(np.arange(10, 100, 10))
-        else:
-            data = data.reshape((200, 20, 355, 328))
-            product = np.prod(data.shape)
-            total_samples += product
+        
         
     print("required size:",total_samples)
     # Initialize memmap files
