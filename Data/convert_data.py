@@ -72,6 +72,7 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
     labels=[]
     # Second pass: process files one at a time
     current_idx = 0
+    ones_made_id=0
     for file_path in file_paths:
         filename = os.path.basename(file_path)
         #print("Processing:", filename)
@@ -92,8 +93,12 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
             num_samples = np.prod(data.shape)
         
         # Write to memmap
-        data_memmap[current_idx:current_idx + num_samples] = data.flatten()
-        labels.append([num for i in range(200)])
+        try:
+            data_memmap[current_idx:current_idx + num_samples] = data.flatten()
+            labels.append([num for i in range(200)])
+            ones_made_id+=1
+        except:
+            pass
         
         current_idx += num_samples
     
@@ -110,7 +115,7 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
         os.remove(data_memmap_path)
     except:
         pass
-    final_data=final_data.reshape((len(file_paths)*200, 20, 355, 328))
+    final_data=final_data.reshape((ones_made_id*200, 20, 355, 328))
 
     encoder = OneHotEncoder()
     final_labels = encoder.fit_transform(final_labels.reshape((-1,1)))
