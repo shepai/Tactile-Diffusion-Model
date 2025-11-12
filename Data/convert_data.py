@@ -98,7 +98,7 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
         # Write to memmap
         try:
             data_memmap[current_idx:current_idx + num_samples] = data.flatten()
-            labels.append([num for i in range(200)])
+            labels.append([num for i in range(data.shape[0])])
             ones_made_id+=1
         except:
             pass
