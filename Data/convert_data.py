@@ -50,8 +50,8 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
         try:
             data = np.load(file_path)
             if type_ == "circle" or type_ == "pressure":
-                data = data[:, :, :len(np.arange(10, 100, 10))]
-                total_samples += data.shape[0] * 2 * len(np.arange(10, 100, 10))
+                data = data[:, :, :20].reshape((20, 20, 355, 328))
+                total_samples += np.prod(data.shape)
             else:
                 data = data.reshape((200, 20, 355, 328))
                 product = np.prod(data.shape)
@@ -65,7 +65,7 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
     # Initialize memmap files
     if type_=="pressure" or type_=="circle":
         data_memmap = np.memmap(data_memmap_path, dtype=np.uint8, mode='w+', 
-                           shape=(total_samples, *sample_shape[1:]))
+                           shape=(total_samples))
     else:
         data_memmap = np.memmap(data_memmap_path, dtype=np.uint8, mode='w+', shape=(total_samples,))
 
@@ -82,12 +82,15 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
             newlabel = filename.split("_")[2].lower()
         else:
             newlabel = filename.split("_")[1].lower()
-        num = keys[newlabel]
+        try:
+            num = keys[newlabel]
+        except:
+            num = keys[newlabel[1:]+str(newlabel[0])] #if forams are labelled incorrectly
         
         if type_ == "circle" or type_ == "pressure":
-            data = data[:, :, :len(np.arange(10, 100, 10))]
-            data = data.reshape((1 * 2 * len(np.arange(10, 100, 10)), 50, *data.shape[4:]))
-            num_samples = data.shape[0]
+            data = data[:, :, :20]
+            data = data.reshape((20, 20, 355, 328))
+            num_samples = np.prod(data.shape)
         else:
             data=data.reshape((200, 20, 355, 328))
             num_samples = np.prod(data.shape)
@@ -115,7 +118,7 @@ def load_files_memory_efficient(directory, type_="standard", temp_dir=None,press
         os.remove(data_memmap_path)
     except:
         pass
-    final_data=final_data.reshape((ones_made_id*200, 20, 355, 328))
+    final_data=final_data.reshape((ones_made_id*data.shape[0], 20, 355, 328))
 
     encoder = OneHotEncoder()
     final_labels = encoder.fit_transform(final_labels.reshape((-1,1)))
