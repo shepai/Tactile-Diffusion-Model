@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-
+import cv2
 
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -29,13 +29,19 @@ yn = yn[mask]
 mask = np.any(Xn != 1, axis=(1, 2, 3))
 Xn = Xn[mask]
 yn = yn[mask]
-print("X shape:")
-h=0
-w=0
-#resize and reshape the data
-for i in range(len(X)):
-    for j in range(len(X.shape[1])):
-        pass
+print("X shape:",X.shape,"X non linear shape:",Xn.shape)
+def resize(X_):
+    h=int(X.shape[2]*0.3)
+    w=int(X.shape[3]*0.3)
+    new_X=np.zeros((len(X),len(X[0]),h,w))
+    #resize and reshape the data
+    for i in range(len(X)):
+        for j in range(len(X.shape[1])):
+            resized_image = cv2.resize(X[i][j], (h,w), dst=None, fx=None, fy=None, interpolation=cv2.INTER_LINEAR)
+            new_X[i][j]=resized_image
+    return new_X 
+X=resize(X)
+Xn=resize(Xn)
 #train model
 dataset = torch.utils.data.TensorDataset(torch.tensor(X))
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
