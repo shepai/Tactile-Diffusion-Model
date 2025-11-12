@@ -29,12 +29,12 @@ yn = yn[mask]
 mask = np.any(Xn != 1, axis=(1, 2, 3))
 Xn = Xn[mask]
 yn = yn[mask]
+#resize and reshape the data
 print("X shape:",X.shape,"X non linear shape:",Xn.shape)
-def resize(X_):
-    h=int(X.shape[2]*0.3)
-    w=int(X.shape[3]*0.3)
+def resize(X_,SF=0.3):
+    h=int(X.shape[2]*SF)
+    w=int(X.shape[3]*SF)
     new_X=np.zeros((len(X),len(X[0]),h,w))
-    #resize and reshape the data
     for i in range(len(X)):
         for j in range(len(X.shape[1])):
             resized_image = cv2.resize(X[i][j], (h,w), dst=None, fx=None, fy=None, interpolation=cv2.INTER_LINEAR)
