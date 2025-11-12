@@ -12,10 +12,10 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,), (0.5,))
 ])
 #load in data and process
-X=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/X_data.npy")[:,:7,:].reshape((200,7*355,328))
-y=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/y_data.npy")
-Xn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/Xn_data.npy")[:,:7,:].reshape((200,7*355,328))
-yn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/yn_data.npy")
+X=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/X_Data.npy")[:,:7,:]#.reshape((200,7*355,328))
+y=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/y_Data.npy")
+Xn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/Xn_Data.npy")[:,:7,:]#.reshape((200,7*355,328))
+yn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/yn_Data.npy")
 #preprocess it all
 mask = np.any(X != 0, axis=(1, 2, 3))
 X = X[mask]
@@ -29,7 +29,13 @@ yn = yn[mask]
 mask = np.any(Xn != 1, axis=(1, 2, 3))
 Xn = Xn[mask]
 yn = yn[mask]
-
+print("X shape:")
+h=0
+w=0
+#resize and reshape the data
+for i in range(len(X)):
+    for j in range(len(X.shape[1])):
+        pass
 #train model
 dataset = torch.utils.data.TensorDataset(torch.tensor(X))
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
