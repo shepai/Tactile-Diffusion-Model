@@ -40,8 +40,8 @@ def resize(X_):
             resized_image = cv2.resize(X[i][j], (h,w), dst=None, fx=None, fy=None, interpolation=cv2.INTER_LINEAR)
             new_X[i][j]=resized_image
     return new_X 
-X=resize(X)
-Xn=resize(Xn)
+X=resize(X).reshape((len(X),X.shape[1]*X.shape[2],X.shape[3]))
+Xn=resize(Xn).reshape((len(Xn),Xn.shape[1]*Xn.shape[2],Xn.shape[3]))
 #train model
 dataset = torch.utils.data.TensorDataset(torch.tensor(X))
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
