@@ -16,21 +16,24 @@ X=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/X_Data.npy")[:,:7,:]#.re
 y=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/y_Data.npy", allow_pickle=True).item().toarray()
 Xn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/Xn_Data.npy")[:,:7,:]#.reshape((200,7*355,328))
 yn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/yn_Data.npy", allow_pickle=True).item().toarray()
+print("X shape:", X.shape)
+print("y shape:", y.shape)
+print("Xn shape:", Xn.shape)
+print("yn shape:", yn.shape)
 #preprocess it all
 mask = np.any(X != 0, axis=(1, 2, 3))
-X = X[mask]
-y = y[mask]
+X, y = X[mask], y[mask]
+
 mask = np.any(X != 1, axis=(1, 2, 3))
-X = X[mask]
-y = y[mask]
+X, y = X[mask], y[mask]
+
 mask = np.any(Xn != 0, axis=(1, 2, 3))
-Xn = Xn[mask]
-yn = yn[mask]
+Xn, yn = Xn[mask], yn[mask]
+
 mask = np.any(Xn != 1, axis=(1, 2, 3))
-Xn = Xn[mask]
-yn = yn[mask]
+Xn, yn = Xn[mask], yn[mask]
 #resize and reshape the data
-print("X shape:",X.shape,"X non linear shape:",Xn.shape)
+
 def resize(X_,SF=0.3):
     h=int(X_.shape[2]*SF)
     w=int(X_.shape[3]*SF)
@@ -44,8 +47,7 @@ X=resize(X)
 X=X.reshape((len(X),X.shape[1]*X.shape[2],X.shape[3]))
 Xn=resize(Xn)
 Xn=Xn.reshape((len(Xn),Xn.shape[1]*Xn.shape[2],Xn.shape[3]))
-plt.imshow(X[0])
-plt.show()
+print("X shape:",X.shape,"X non linear shape:",Xn.shape)
 #train model
 dataset = torch.utils.data.TensorDataset(torch.tensor(X, dtype=torch.float32),torch.tensor(y, dtype=torch.float32))
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
