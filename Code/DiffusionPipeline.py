@@ -9,9 +9,13 @@ class DenoisingNN(nn.Module):
     def __init__(self):
         super(DenoisingNN, self).__init__()
         self.fc = nn.Sequential(
-            nn.Linear(28*28, 128),  # Reduced size
+            nn.Linear(742*98, 1288),  # Reduced size
             nn.ReLU(),
-            nn.Linear(128, 28*28)   # Output size is flattened image size
+            nn.Linear(1288,128),  # Reduced size
+            nn.ReLU(),
+            nn.Linear(128,1288),  # Reduced size
+            nn.ReLU(),
+            nn.Linear(1288, 742*98)   # Output size is flattened image size
         )
     
     def forward(self, x):
