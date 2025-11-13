@@ -12,9 +12,9 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,), (0.5,))
 ])
 #load in data and process
-X=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/X_Data.npy")[:,:7,:]#.reshape((200,7*355,328))
+X=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/X_Data.npy")[:,:7,:]#normal stroke data
 y=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/y_Data.npy", allow_pickle=True).item().toarray()
-Xn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/Xn_Data.npy")[:,:7,:]#.reshape((200,7*355,328))
+Xn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/Xn_Data.npy")[:,:7,:]#non linear stroke data
 yn=np.load("/its/home/drs25/Tactile-Diffusion-Model/Data/yn_Data.npy", allow_pickle=True).item().toarray()
 print("X shape:", X.shape)
 print("y shape:", y.shape)
@@ -56,8 +56,8 @@ model = DenoisingNN()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 print("Training started...")
-train(model, optimizer, dataloader, num_steps=100)
+train(model, optimizer, dataloader, num_steps=20) #train model 
 print("Training completed.")
-
+torch.save(model.state_dict(), "/its/home/drs25/Tactile-Diffusion-Model/Data/models/denoising_nn_20.pth")
 #look at examples
 generate_images(model)
